@@ -1,0 +1,26 @@
+﻿@model InternalTradeMarket.ViewModels.LoadsViewModel
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (User.Identity.GetUserName() == "thomas.d.hansen@se.dsv.com")
+{
+    <h2>Admin page</h2>
+    <br />
+    using (Html.BeginForm("AdminLoads", "Admin"))
+    {
+        <div class="form-group">
+            @Html.Label("Write username to see loads")
+            @Html.TextBox("SearchString")
+            @Html.HiddenFor(m => m.Loads.Id)
+            <button type="submit" class="btn btn-primary">Loads</button>
+        </div>
+    }
+}
+else
+{
+    <br />
+    <p>You must be logged in as administrator to view this page, if you are administrator please login with your administrator account</p>
+}

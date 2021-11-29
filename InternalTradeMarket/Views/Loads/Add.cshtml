@@ -1,0 +1,97 @@
+﻿@model InternalTradeMarket.ViewModels.LoadsViewModel
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Add load</h2>
+
+@using (Html.BeginForm("Save", "Loads"))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Loads.DepartureCity)
+        @Html.TextBoxFor(m => m.Loads.DepartureCity, new { @class = "form-control"})
+        @Html.ValidationMessageFor(m => m.Loads.DepartureCity)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Loads.DepartureZipCode)
+        @Html.TextBoxFor(m => m.Loads.DepartureZipCode, new { @class = "form-control"})
+        @Html.ValidationMessageFor(m => m.Loads.DepartureZipCode)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Loads.DepartureCountry)
+        @Html.TextBoxFor(m => m.Loads.DepartureCountry, new { @class = "form-control"})
+        @Html.ValidationMessageFor(m => m.Loads.DepartureCountry)
+    </div>
+        
+    <div class="form-group">
+        @Html.LabelFor(m => m.Loads.ArrivalCity)
+        @Html.TextBoxFor(m => m.Loads.ArrivalCity, new { @class = "form-control"})
+        @Html.ValidationMessageFor(m => m.Loads.ArrivalCity)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Loads.ArrivalZipCode)
+        @Html.TextBoxFor(m => m.Loads.ArrivalZipCode, new { @class = "form-control"})
+        @Html.ValidationMessageFor(m => m.Loads.ArrivalZipCode)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Loads.ArrivalCountry)
+        @Html.TextBoxFor(m => m.Loads.ArrivalCountry, new { @class = "form-control"})
+        @Html.ValidationMessageFor(m => m.Loads.ArrivalCountry)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Loads.PickupDate)
+        @Html.TextBoxFor(m => m.Loads.PickupDate, "{0:yyyy-mm-dd}", new { @class = "form-control"}) YYYY-MM-DD
+        @Html.ValidationMessageFor(m => m.Loads.PickupDate)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Loads.DeliveryDate)
+        @Html.TextBoxFor(m => m.Loads.DeliveryDate, new { @class = "form-control" })  YYYY-MM-DD
+        @Html.ValidationMessageFor(m => m.Loads.DeliveryDate)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Loads.Weight)
+        @Html.TextBoxFor(m => m.Loads.Weight, new { @class = "form-control"})
+        @Html.ValidationMessageFor(m => m.Loads.Weight)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Loads.LoadingMeter)
+        @Html.TextBoxFor(m => m.Loads.LoadingMeter, new { @class = "form-control"})
+        @Html.ValidationMessageFor(m => m.Loads.LoadingMeter)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Loads.ExtraComments)
+        @Html.TextBoxFor(m => m.Loads.ExtraComments, new { @class = "form-control"})
+        @Html.ValidationMessageFor(m => m.Loads.ExtraComments)
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Loads.Frigo)
+        @Html.CheckBoxFor(m => m.Loads.Frigo, new { @class = "form-control"})
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Loads.Adr)
+        @Html.CheckBoxFor(m => m.Loads.Adr, new { @class = "form-control"})
+    </div>
+
+    @Html.HiddenFor(m => m.Loads.UserName, new { @Value = User.Identity.GetUserName()})
+    @Html.HiddenFor(m => m.Loads.Id)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

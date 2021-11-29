@@ -1,0 +1,44 @@
+﻿@model InternalTradeMarket.Models.Load
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Load Details</h2>
+
+<ul>
+    <li><span style="font-weight: bold">Departure City:</span> @Model.DepartureCity</li>
+    <li><span style="font-weight: bold">Loading zip code:</span> @Model.DepartureZipCode</li>
+    <li><span style="font-weight: bold">Pickup country</span> @Model.DepartureCountry</li>
+    <li><span style="font-weight: bold">Destination City:</span> @Model.ArrivalCity</li>
+    <li><span style="font-weight: bold">Destination zip code:</span> @Model.DepartureZipCode</li>
+    <li><span style="font-weight: bold">Delivery country</span> @Model.ArrivalCountry</li>
+    <li><span style="font-weight: bold">Pickup date:</span> @Model.PickupDate.Value.ToShortDateString()</li>
+    <li><span style="font-weight: bold">Delivery date:</span> @Model.DeliveryDate.Value.ToShortDateString()</li>
+    <li><span style="font-weight: bold">Weight:</span> @Model.Weight</li>
+    <li><span style="font-weight: bold">LDM:</span> @Model.LoadingMeter</li>
+
+    @if (Model.Frigo == true)
+    {
+        <li><span style="font-weight: bold">Frigo:</span> Yes</li>
+    }
+    else
+    {
+        <li><span style="font-weight: bold">Frigo:</span> No</li>
+    }
+
+    @if (Model.Adr == true)
+    {
+        <li><span style="font-weight: bold">Dangerous Goods:</span> Yes</li>
+    }
+    else
+    {
+        <li><span style="font-weight: bold">Dangerous Goods:</span> No</li>
+    }
+
+    <li><span style="font-weight: bold">Extra Comments:</span> @Model.ExtraComments</li>
+    <li><span style="font-weight: bold">Contact responsible for this load:</span> @Model.UserName</li>
+
+</ul>
+
+<a href="mailto:@Model.UserName?subject=@Model.LoadingMeter ldm From @Model.DepartureCity to @Model.ArrivalCity&body=Is this load still available">Click to request load</a>

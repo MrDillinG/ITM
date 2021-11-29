@@ -1,0 +1,181 @@
+﻿@model PagedList.IPagedList<InternalTradeMarket.Models.Load>
+@using PagedList.Mvc;
+@using Microsoft.AspNet.Identity;
+
+@{
+    ViewBag.Title = "Loads";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!--If we go live in Norway change styletsheet and script source from web based to downloaded version-->
+<!--from this page https://leafletjs.com/download.html -->
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+      crossorigin="" />
+
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+
+<h2>Loads</h2>
+
+
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    table tr:hover {
+        background-color: #ddd;
+    }
+
+    table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    #map {
+        position: fixed;
+        left: 15px;
+        top: 115px;
+        height: 700px;
+        width: 350px;
+    }
+</style>
+
+@if (!User.Identity.GetUserName().Any())
+{
+    <p></p>
+}
+else
+{
+    <button onclick="location.href = '@Url.Action("Add", "Loads")'" , class="btn btn-primary">Sell Load</button>
+}
+
+<p></p>
+
+<div id="map"></div>
+
+<script>
+    const here = {
+        apiKey: 'igRPNAnHXkqsgTnhbKd8Gz1UPv8NuLAfHOWvOyPO8_Y'
+    }
+    const style = 'normal.day'
+
+    const hereTileUrl = `https://2.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/${style}/{z}/{x}/{y}/256/png8?apiKey=${here.apiKey}&ppi=320`;
+
+    const map = L.map('map', {
+        center: [55.8708, 12.83016],
+        zoom: 11,
+        layers: [L.tileLayer(hereTileUrl)]
+    });
+    map.attributionControl.addAttribution('&copy; HERE 2021');
+
+</script>
+
+<br />
+
+<!--Loads are shown below-->
+@if (!Model.Any())
+{
+    <p>No loads to purchase</p>
+    <button onclick="location.href = '@Url.Action("Loads", "Loads")'">Back</button>
+}
+else
+{
+    if (!User.Identity.GetUserName().Any())
+    {
+        <h6>You have to sign in to be able to view this page</h6>
+    }
+    else
+    {
+        <form class="form-inline">
+            <div class="form-group">
+                @using (Html.BeginForm("Loads", "Loads", FormMethod.Get))
+                {
+                    <text>Pickup Country </text>@Html.DropDownList("dcountry", new SelectList(ViewBag.Departurecountry), "", new { @class = "form-control" })
+                    <text>Arrival Country </text>@Html.DropDownList("acountry", new SelectList(ViewBag.Arrivalcountry), "", new { @class = "form-control" })
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                }
+            </div>
+        </form>
+
+        <p></p>
+
+        <table>
+            <tr>
+                <th>Departure City</th>
+                <th>Departure ZipCode</th>
+                <th>Departure Country</th>
+                <th>Arrival City</th>
+                <th>Arrival ZipCode</th>
+                <th>Arrival Country</th>
+                <th>Pickup Date</th>
+                <th>Delivery Date</th>
+                <th>Weight</th>
+                <th>Ldm</th>
+                <th>Frigo</th>
+                <th>Dangerous Goods</th>
+                <th>Extra Comments</th>
+            </tr>
+            @foreach (var loads in Model)
+            {
+                <tr onclick="location.href = '@Url.Action("Details", new { id = loads.Id})'">
+                    <td>@loads.DepartureCity</td>
+                    <td>@loads.DepartureZipCode</td>
+                    <td>@loads.DepartureCountry</td>
+                    <td>@loads.ArrivalCity</td>
+                    <td>@loads.ArrivalZipCode</td>
+                    <td>@loads.ArrivalCountry</td>
+                    <td>@loads.PickupDate.Value.ToShortDateString()</td>
+                    <td>@loads.DeliveryDate.Value.ToShortDateString()</td>
+                    <td>@loads.Weight</td>
+
+                    @if (loads.LoadingMeter == "13,6")
+                    {
+                        <td>Full Load</td>
+                    }
+                    else
+                    {
+                        <td>@loads.LoadingMeter</td>
+                    }
+
+                    @if (loads.Frigo == true)
+                    {
+                        <td>Yes</td>
+                    }
+                    else
+                    {
+                        <td>No</td>
+                    }
+
+                    @if (loads.Adr == true)
+                    {
+                        <td>Yes</td>
+                    }
+                    else
+                    {
+                        <td>No</td>
+                    }
+
+                    @if (loads.ExtraComments == null)
+                    {
+                        <td>No</td>
+                    }
+                    else
+                    {
+                        <td>Yes</td>
+                    }
+                </tr>
+            }
+        </table>
+        <br />
+        @Html.PagedListPager(Model, page => Url.Action("Loads", new { page, acountry = ViewBag.CurrentFilterA, dcountry = ViewBag.CurrentFilterD }))
+    }
+}

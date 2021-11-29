@@ -1,0 +1,124 @@
+﻿@model IEnumerable<InternalTradeMarket.Models.Load>
+@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    var view = 0;
+    var Content = document.getElementById("editLoad");
+
+    function viewEdit() {
+        if (Content.style.display = "none") {
+            Content.style.display = "block";
+        } else {
+            Content.style.display = "none";
+        }
+    }
+
+</script>
+
+<style>
+    #editLoad {
+        display: none;
+    }
+</style>
+
+<h2>My Loads</h2>
+
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td, th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    table tr:hover {
+        background-color: #ddd;
+    }
+
+    table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+</style>
+
+@if (!User.Identity.GetUserName().Any())
+{
+    <h6>You have to sign in to be able to view this page</h6>
+}
+else
+{
+    <table>
+        <tr>
+            <th>Departure City</th>
+            <th>Departure ZipCode</th>
+            <th>Departure Country</th>
+            <th>Arrival City</th>
+            <th>Arrival ZipCode</th>
+            <th>Arrival Country</th>
+            <th>Pickup Date</th>
+            <th>Delivery Date</th>
+            <th>Weight</th>
+            <th>Ldm</th>
+            <th>Frigo</th>
+            <th>Dangerous Goods</th>
+            <th>Extra Comments</th>
+        </tr>
+        @foreach (var loads in Model.Where(p => p.UserName == User.Identity.GetUserName()))
+        {
+            <tr onclick="location.href = '@Url.Action("Edit", new { id = loads.Id})'">
+            <!--<tr onclick="viewEdit">-->
+                <td>@loads.DepartureCity</td>
+                <td>@loads.DepartureZipCode</td>
+                <td>@loads.DepartureCountry</td>
+                <td>@loads.ArrivalCity</td>
+                <td>@loads.ArrivalZipCode</td>
+                <td>@loads.ArrivalCountry</td>
+                <td>@loads.PickupDate.Value.ToShortDateString()</td>
+                <td>@loads.DeliveryDate.Value.ToShortDateString()</td>
+                <td>@loads.Weight</td>
+                <td>@loads.LoadingMeter</td>
+
+                @if (loads.Frigo == true)
+                {
+                    <td>Yes</td>
+                }
+                else
+                {
+                    <td>No</td>
+                }
+
+                @if (loads.Adr == true)
+                {
+                    <td>Yes</td>
+                }
+                else
+                {
+                    <td>No</td>
+                }
+
+                @if (loads.ExtraComments == null)
+                {
+                    <td>No</td>
+                }
+                else
+                {
+                    <td>Yes</td>
+                }
+                <td>@Html.ActionLink("Remove Load", "Remove", new { id = loads.Id })</td>
+            </tr>
+        }
+    </table>
+
+    <!--Trying to view the edit on the same screen as the table-->
+    <!--<div class="container">
+        <div id="editLoad">
+            0@Html.Partial("PartialEdit")
+        </div>
+    </div>-->
+}
